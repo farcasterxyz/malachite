@@ -144,13 +144,15 @@ impl Behaviour {
 
         let ping = ping::Behaviour::new(ping::Config::new().with_interval(Duration::from_secs(5)));
 
-        let gossipsub = gossipsub::Behaviour::new_with_metrics(
+        let gossipsub = gossipsub::Behaviour::new(
             gossipsub::MessageAuthenticity::Signed(keypair.clone()),
             gossipsub_config(config.gossipsub, config.pubsub_max_size),
+        )
+        .unwrap()
+        .with_metrics(
             registry.sub_registry_with_prefix("gossipsub"),
             Default::default(),
-        )
-        .unwrap();
+        );
 
         let broadcast = broadcast::Behaviour::new_with_metrics(
             broadcast::Config {
