@@ -69,13 +69,12 @@ impl Behaviour {
                 keypair.public(),
             )),
             ping: ping::Behaviour::new(ping::Config::new().with_interval(Duration::from_secs(5))),
-            gossipsub: gossipsub::Behaviour::new_with_metrics(
+            gossipsub: gossipsub::Behaviour::new(
                 gossipsub::MessageAuthenticity::Signed(keypair.clone()),
                 gossipsub_config(),
-                registry,
-                Default::default(),
             )
-            .unwrap(),
+            .unwrap()
+            .with_metrics(registry, Default::default()),
         }
     }
 }
